@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Workout Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style media="screen">
+        body {
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 40px;
+            color: cornsilk;
+        }
+        
+        .delete {
+            margin-left: 20px;
+            color: black;
+            cursor: pointer;
+            text-align: right;
+        }
+        
+        input {
+            width: 400px;
+            height: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 42px;
+            background-color: white;
+        }
+        
+        #workout {
+            width: 400px;
+            height: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .data-title {
+            cursor: pointer;
+            font-size: 24px;
+        }
+        
+        #results {
+            width: 400px;
+            height: 200px;
+            overflow: auto;
+            margin-left: auto;
+            margin-right: auto;
+            color: black;
+            background-color: white;
+        }
+        
+        #action-button {
+            display: inline-block;
+        }
+        
+        #buttons {
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body style="background-color: cornflowerblue;">
+    <div class="jumbotron jumbotron-fluid" style="background-color: cornflowerblue;">
+        <div class="container">
+            <h1 class="display-4" style="color:cornsilk">Workout Tracker</h1>
+        </div>
+    </div>
+    <div id="user-input">
+        <form>
+            <input class="form-control form-control-lg" type="text" id="title" style="width: 400px" placeholder="Enter name of workout plan">
+            <br>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1" style="color: cornsilk">Select wourkout type:</label>
+                    <select class="form-control" id="exampleFormControlSelect1" style="width: 400px; margin: auto">
+                        <option>Aerobic</option>
+                        <option>Strength</option>
+                        <option>Flexibility</option>
+                        <option>Balance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect2" style="color: cornsilk">Targeted muscle group:</label>
+                    <select class="form-control" id="exampleFormControlSelect2" style="width: 400px; margin: auto">
+                        <option>Legs</option>
+                        <option>Arms</option>
+                        <option>Chest</option>
+                        <option>Core</option>
+                        <option>Back</option>
+                        <option>Shoulders</option>
+                        <option>Whole body</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput" style="color: cornsilk">List exercises:</label>
+                    <input type="text" class="form-control" id="workout">
+                </div>
+            </form>
+        </form>
+        <button type="button" class="btn btn-outline-light" id="make-new">Submit New Workout Plan</button>
+        <button type="button" class="btn btn-outline-light" id="clear-all">Delete All Workouts</button>
+    </div>
+    <br>
+    <p style="color: cornsilk">Past Workouts</p>
+    <div id="results" style="border-radius: 0.3rem"></div>
+    <script src="app.js"></script>
+</body>
+
+</html>
