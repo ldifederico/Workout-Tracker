@@ -2,7 +2,6 @@ const actionBtn = document.getElementById("action-button");
 const makeWorkout = document.getElementById("make-new");
 const clear = document.getElementById("clear-all");
 const results = document.getElementById("results");
-const status = document.getElementById("status");
 
 function getResults() {
     clearWorkouts();
@@ -16,7 +15,7 @@ function getResults() {
             });
         })
         .catch(function(err) {
-            console.log("Fetch Error :-S", err);
+            console.log(err);
         });
 }
 
@@ -25,12 +24,12 @@ function newWorkoutPlan(res) {
         let data_id = res[i]["_id"];
         let title = res[i]["title"];
         let workoutPlan = document.getElementById("results");
-        snippet = `
+        oneResult = `
       <p class="data-entry">
       <span class="dataTitle" data-id=${data_id}>${title}</span>
       <span onClick="delete" class="delete" data-id=${data_id}>x</span>
       </p>`;
-      workoutPlan.insertAdjacentHTML("beforeend", snippet);
+      workoutPlan.insertAdjacentHTML("beforeend", oneResult);
     }
 }
 
@@ -40,40 +39,28 @@ function clearWorkouts() {
 }
 
 function resetTitleAndWorkout() {
-    const workout = document.getElementById("workout");
-    workout.value = "";
     const title = document.getElementById("title");
     title.value = "";
+    const type = document.getElementById("type");
+    type.value = "";
+    const muscle = document.getElementById("muscle");
+    muscle.value = "";
+    const workout = document.getElementById("workout");
+    workout.value = "";
 }
 
 function updateTitleAndWorkout(data) {
-    const workout = document.getElementById("workout");
-    workout.value = data.workout;
     const title = document.getElementById("title");
     title.value = data.title;
+    const type = document.getElementById("type");
+    type.value = data.type;
+    const muscle = document.getElementById("muscle");
+    muscle.value = data.muscle;
+    const workout = document.getElementById("workout");
+    workout.value = data.workout;
 }
 
 getResults();
-
-clear.addEventListener("click", function(e) {
-    if (e.target.matches("#clear-all")) {
-        element = e.target;
-        data_id = element.getAttribute("data-id");
-        fetch("/clearall", {
-                method: "delete"
-            })
-            .then(function(response) {
-                if (response.status !== 200) {
-                    console.log("Looks like there was a problem. Status Code: " + response.status);
-                    return;
-                }
-                clearWorkouts();
-            })
-            .catch(function(err) {
-                console.log("Fetch Error :-S", err);
-            });
-    }
-});
 
 results.addEventListener("click", function(e) {
     if (e.target.matches(".delete")) {
@@ -84,33 +71,30 @@ results.addEventListener("click", function(e) {
             })
             .then(function(response) {
                 if (response.status !== 200) {
-                    console.log("Looks like there was a problem. Status Code: " + response.status);
                     return;
                 }
                 element.parentNode.remove();
                 resetTitleAndWorkout();
-                let newButton = `
-      <button id='make-new'>Submit</button>`;
+                let newButton = `<button class="btn btn-outline-light" id='make-new'>Submit</button>`;
                 actionBtn.innerHTML = newButton;
             })
             .catch(function(err) {
-                console.log("Fetch Error :-S", err);
+                console.log(err);
             });
     } else if (e.target.matches(".dataTitle")) {
         element = e.target;
         data_id = element.getAttribute("data-id");
-        status.innerText = "Editing"
         fetch("/find/" + data_id, { method: "get" })
             .then(function(response) {
                 return response.json();
             })
             .then(function(data) {
                 updateTitleAndWorkout(data);
-                let newButton = `<button id='updater' data-id=${data_id}>Update</button>`;
+                let newButton = `<button class="btn btn-outline-light" id='updater' data-id=${data_id}>Update</button>`;
                 actionBtn.innerHTML = newButton;
             })
             .catch(function(err) {
-                console.log("Fetch Error :-S", err);
+                console.log(err);
             });
     }
 });
@@ -120,6 +104,8 @@ actionBtn.addEventListener("click", function(e) {
         updateBtnEl = e.target;
         data_id = updateBtnEl.getAttribute("data-id");
         const title = document.getElementById("title").value;
+        const type = document.getElementById("type").value;
+        const muscle = document.getElementById("muscle").value;
         const workout = document.getElementById("workout").value;
         fetch("/update/" + data_id, {
                 method: "post",
@@ -129,6 +115,8 @@ actionBtn.addEventListener("click", function(e) {
                 },
                 body: JSON.stringify({
                     title,
+                    type,
+                    muscle,
                     workout
                 })
             })
@@ -138,12 +126,11 @@ actionBtn.addEventListener("click", function(e) {
             .then(function(data) {
                 element.innerText = title
                 resetTitleAndWorkout();
-                let newButton = `<button id='make-new'>Submit</button>`;
+                let newButton = `<button class="btn btn-outline-light" id='make-new'>Submit</button>`;
                 actionBtn.innerHTML = newButton;
-                status.innerText = "Creating"
             })
             .catch(function(err) {
-                console.log("Fetch Error :-S", err);
+                console.log(err);
             });
     } else if (e.target.matches("#make-new")) {
         element = e.target;
@@ -156,8 +143,9 @@ actionBtn.addEventListener("click", function(e) {
                 },
                 body: JSON.stringify({
                     title: document.getElementById("title").value,
+                    type: document.getElementById("type").value,
+                    muscle: document.getElementById("muscle").value,
                     workout: document.getElementById("workout").value,
-                    created: Date.now()
                 })
             })
             .then(res => res.json())

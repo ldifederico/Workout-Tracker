@@ -3,23 +3,19 @@ const logger = require("morgan");
 const mongojs = require("mongojs");
 const path = require("path");
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 app.use(logger("dev"));
-
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-
 app.use(express.static("public"));
 
 const databaseUrl = "workoutTracker";
 const collections = ["workouts"];
-
 const db = mongojs(databaseUrl, collections);
 
-db.on("error", error => {
-  console.log("Database Error:", error);
+db.on("err", err => {
+  console.log(err);
 });
 
 app.get("/", (req, res) => {
@@ -27,19 +23,19 @@ app.get("/", (req, res) => {
 });
 
 app.post("/submit", (req, res) => {  
-    db.workouts.insert(req.body, (error, data) => {
-      if (error) {
-        res.send(error);
-      } else {
-        res.send(data);
-      }
-    });
+  db.workouts.insert(req.body, (err, data) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data);
+    }
+  });
 });
   
 app.get("/all", (req, res) => {
-    db.workouts.find({}, (error, data) => {
-      if (error) {
-        res.send(error);
+    db.workouts.find({}, (err, data) => {
+      if (err) {
+        res.send(err);
       } else {
         res.json(data);
       }
@@ -51,9 +47,9 @@ app.get("/find/:id", (req, res) => {
     {
       _id: mongojs.ObjectId(req.params.id)
     },
-    (error, data) => {
-      if (error) {
-        res.send(error);
+    (err, data) => {
+      if (err) {
+        res.send(err);
       } else {
         res.send(data);
       }
@@ -62,25 +58,26 @@ app.get("/find/:id", (req, res) => {
 });
   
 app.post("/update/:id", (req, res) => {
-    db.workouts.update(
-      {
-        _id: mongojs.ObjectId(req.params.id)
-      },
-      {
-        $set: {
-          title: req.body.title,
-          workout: req.body.workout,
-          modified: Date.now()
-        }
-      },
-      (error, data) => {
-        if (error) {
-          res.send(error);
-        } else {
-          res.send(data);
-        }
+  db.workouts.update(
+    {
+      _id: mongojs.ObjectId(req.params.id)
+    },
+    {
+      $set: {
+        title: req.body.title,
+        type: req.body.type,
+        muscle: req.body.muscle,
+        workout: req.body.workout,
       }
-    );
+    },
+    (err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    }
+  );
 });
 
 app.delete("/delete/:id", (req, res) => {
@@ -88,9 +85,9 @@ app.delete("/delete/:id", (req, res) => {
     {
       _id: mongojs.ObjectID(req.params.id)
     },
-    (error, data) => {
-      if (error) {
-        res.send(error);
+    (err, data) => {
+      if (err) {
+        res.send(err);
       } else {
         res.send(data);
       }
@@ -99,9 +96,9 @@ app.delete("/delete/:id", (req, res) => {
 });
 
 app.delete("/clearall", (req, res) => {
-  db.workouts.remove({}, (error, response) => {
-    if (error) {
-      res.send(error);
+  db.workouts.remove({}, (err, response) => {
+    if (err) {
+      res.send(err);
     } else {
       res.send(response);
     }
@@ -109,5 +106,5 @@ app.delete("/clearall", (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}!`);
+  console.log(`App running on port ${PORT}!`);
 });
