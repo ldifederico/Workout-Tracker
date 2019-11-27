@@ -10,7 +10,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static("public"));
 
-const databaseUrl = "workoutTracker";
+const databaseUrl = "mongodb://heroku_d24h45c1:ttaa9ng53romrd0505huo3rtn6@ds249008.mlab.com:49008/heroku_d24h45c1";
 const collections = ["workouts"];
 const db = mongojs(databaseUrl, collections);
 
